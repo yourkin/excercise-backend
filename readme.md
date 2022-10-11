@@ -27,7 +27,7 @@ Please include a `solution.md` file where you document your decisions, assumptio
 We value your time ⏰, so we do not expect you to spend more than 4 hours preparing the solution. 🤗
 
 ### Bonus tasks
-* How would you change the system if we would receive async updates to the orders placed on the stock exchange, e.g. execution information? Please outline the changes in the `solution.md`.
+* How would you change the system if we would receive a high volume of async updates to the orders placed through a socket connection on the stock exchange, e.g. execution information? Please outline the changes in the `solution.md`.
 * Feel free to add a GitHub actions workflow to test the application.
 * Feel free to add a Dockerfile.
 
