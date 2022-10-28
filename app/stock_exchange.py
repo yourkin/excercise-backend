@@ -9,7 +9,8 @@ class OrderPlacementError(Exception):
 
 
 def place_order(order: Order):
-    """dummy function that is symbolicly standing for placing an order at the stock exchange"""
+    """dummy function that is symbolic standing for placing an order at the stock exchange.
+    Please do not modify the content of this method."""
 
     if not order:
         raise ValueError("Required order parameter not provided")

@@ -16,7 +16,7 @@ We would like you to finalize the missing parts in this repository so that the f
 2. the created order should be placed at the stock exchange (use the method `place_order` provided in stock_exchange.py)
 3. the endpoint should return a status code of 201 and the created order details, in case that: the order has been saved in the database **AND** it is **guaranteed** that the order is being placed on the stock exchange.  
 4. in case of an error in the endpoint it should return the status code 500 and the body `{"message": "Internal server error while placing the order"}` 
-5. the API should be highly scalable and available.
+5. the API should be highly scalable and reliable. The reliability of the provided stock exchange should not impact the reliability of the `POST /orders` endpoint
 
 
 Additionally, please add some tests and document how you would test the application as a whole and its pieces.
@@ -24,7 +24,8 @@ For the implementation you can choose to use this Python setup or implement it i
 
 Please include a `solution.md` file where you document your decisions, assumptions, and also improvements you would like to incorporate in the future.
 
-We value your time ⏰, so we do not expect you to spend more than 4 hours preparing the solution. 🤗
+We value your time ⏰, so we do not expect you to spend more than 4 hours preparing the solution. 🤗 
+Focus on implementing the main task first and afterwards jump on additional improvements as you see fit.
 
 ### Bonus tasks
 * How would you change the system if we would receive a high volume of async updates to the orders placed through a socket connection on the stock exchange, e.g. execution information? Please outline the changes in the `solution.md`.
