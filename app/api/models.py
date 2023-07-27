@@ -1,11 +1,7 @@
+from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
 from typing import Optional
 
-from fastapi import FastAPI
-from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
-
-from app.types import Order, OrderSide, OrderType
-
-app = FastAPI()
+from app.api.types import Order, OrderSide, OrderType
 
 
 class CreateOrderModel(BaseModel):
@@ -30,14 +26,3 @@ class CreateOrderModel(BaseModel):
 
 class CreateOrderResponseModel(Order):
     pass
-
-
-@app.post(
-    "/orders",
-    status_code=201,
-    response_model=CreateOrderResponseModel,
-    response_model_by_alias=True,
-)
-async def create_order(model: CreateOrderModel):
-    # TODO: Add your implementation here
-    raise NotImplementedError()

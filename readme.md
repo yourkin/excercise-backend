@@ -2,8 +2,8 @@
 
 ### Intro 
 
-The repository contains a bare setup for a REST API to place orders via a `POST - /orders` request, it can be found in [./app/api.py](./app/api.py).
-Additionally, it contains [a building block](./app/stock_exchange.py) that symbolizes placing an order at the stock exchange.
+The repository contains a bare setup for a REST API to place orders via a `POST - /orders` request, it can be found in [./app/api.py](app/api/v1/router.py).
+Additionally, it contains [a building block](app/api/stock_exchange.py) that symbolizes placing an order at the stock exchange.
 
 The folder [tests](./tests) contains the setup for tests with the framework pytest.
 
