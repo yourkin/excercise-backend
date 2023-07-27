@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "excercise backend"
+version = "0.1.0"
+description = "REST API for the Stock Exchange"
+authors = ["Andrew Yourkin <andrew@yourkin.io>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "1.10.2"
+uvicorn = {version = "0.18.3", extras = ["standard"]}
+fastapi = "0.85.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
