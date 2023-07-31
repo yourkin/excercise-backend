@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.api.database import get_session
 from app.api.models import CreateOrderModel, CreateOrderResponseModel
 
 router = APIRouter()
@@ -11,5 +12,4 @@ router = APIRouter()
     response_model_by_alias=True,
 )
 async def create_order(model: CreateOrderModel):
-    # TODO: Add your implementation here
     raise NotImplementedError()
