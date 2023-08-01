@@ -17,7 +17,7 @@ The decision to use RabbitMQ as the message broker was based on its robustness, 
 
 ## Possible Enhancements
 
-1. **Improved Error Handling**; Currently if there is an issue with the stock exchange system the order placement process can fail without any notice. It would be beneficial to implement a error handling mechanism that can notify users or administrators when order placement fails and potentially retry failed orders.
+1. **Improved Error Handling**: Previously, if there was an issue with the stock exchange system, the order placement process could fail without providing any meaningful feedback to users or administrators. However, as part of our enhancements, we have successfully implemented a robust error handling mechanism that incorporates automatic retries for failed orders. Now, in the event of a transient failure during order placement, the system will automatically attempt to retry the process for a certain number of times, increasing the likelihood of successful order placement. This proactive approach not only increases the reliability of the application but also ensures that administrators are promptly notified if any critical issues persist. With these improvements, the application maintains better resilience and provides more insights into any potential issues during the order placement process.
 
 2. **Enhanced Testing**; Although basic unit tests have been implemented there is room for improvement, in the testing suite. Integration tests could be added to ensure that all components of the application are functioning together as expected. Additionally load tests could help identify any performance issues.
 

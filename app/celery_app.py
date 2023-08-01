@@ -2,12 +2,19 @@ from celery import Celery
 from app.api.database import create_order as create_order_db
 from app.api.models import CreateOrderModel
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.api import stock_exchange
 
-# Configure Celery to use the Redis broker
-celery_app = Celery('tasks', broker='pyamqp://guest@localhost//')
+# Configure Celery to use the RabbitMQ broker
+celery_app = Celery('tasks', broker='amqp://user:password@rabbitmq//')
 
 # Celery task for creating an order
-@celery_app.task
-async def create_order(session: AsyncSession, order: dict):
-    model = CreateOrderModel.parse_obj(order)
-    await create_order_db(session, model)
+@celery_app.task(bind=True, max_retries=3)
+def place_order(self, order: dict):
+    # simulate the order placement in a stock exchange
+    try:
+        result = stock_exchange.place_order(order)
+        if not result:
+            raise Exception('Order placement failed')
+    except Exception as e:
+        raise self.retry(exc=e, countdown=5)
+    return order
