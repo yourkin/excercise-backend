@@ -36,9 +36,9 @@ RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; els
 # add app
 COPY . .
 
-## add entrypoint.sh
-#COPY ./entrypoint.sh .
-#RUN chmod +x /usr/src/app/entrypoint.sh
-#
-## run entrypoint.sh
-#ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# add entrypoint.sh
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+# run entrypoint.sh
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

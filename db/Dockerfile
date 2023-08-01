@@ -1,4 +1,7 @@
-FROM postgres:13.3
+FROM postgres:13
 
-# run create.sql on init
-ADD create.sql /docker-entrypoint-initdb.d
+ENV POSTGRES_DB=postgres
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+
+ADD init.sql /docker-entrypoint-initdb.d/

@@ -1,12 +1,8 @@
 from datetime import datetime
-
+from sqlmodel import SQLModel, Field
+from app.api.types import OrderSide, OrderType, Order
 from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
 from typing import Optional
-
-from sqlmodel import SQLModel, Field
-
-from app.api.types import Order, OrderSide, OrderType
-
 
 class CreateOrderModel(BaseModel):
     type_: OrderType = Field(..., alias="type")
@@ -32,9 +28,9 @@ class CreateOrderResponseModel(Order):
     pass
 
 
-class Order(SQLModel, table=True):
-    id_: int = Field(default=None, alias="id", primary_key=True)
-    created_at: datetime
+class OrderDB(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True, autoincrement=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
     type_: str = Field(..., alias="type")
     side: str
     instrument: str

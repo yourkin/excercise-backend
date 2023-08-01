@@ -4,13 +4,12 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, condecimal, conint, constr
 
-
-class OrderSide(Enum):
+class OrderSide(str, Enum):
     BUY = "buy"
     SELL = "sell"
 
 
-class OrderType(Enum):
+class OrderType(str, Enum):
     MARKET = "market"
     LIMIT = "limit"
 
