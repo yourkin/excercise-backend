@@ -1,9 +1,7 @@
-from fastapi.testclient import TestClient
 from app.main import app
 
-client = TestClient(app)
 
-def test_create_order():
+def test_create_order(client):
     response = client.post(
         "/v1/orders",
         json={
@@ -24,7 +22,7 @@ def test_create_order():
     assert "id" in data
     assert "created_at" in data
 
-def test_create_order_invalid_input():
+def test_create_order_invalid_input(client):
     response = client.post(
         "/v1/orders",
         json={
