@@ -1,6 +1,6 @@
 from datetime import datetime
-from sqlmodel import SQLModel, Field
-from app.api.types import OrderSide, OrderType, Order
+from sqlmodel import SQLModel
+from src.app.api.types import OrderSide, OrderType, Order
 from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
 from typing import Optional
 

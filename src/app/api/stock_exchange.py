@@ -1,7 +1,7 @@
 import random
 import time
 
-from app.api.types import Order
+from src.app.api.types import Order
 
 
 class OrderPlacementError(Exception):

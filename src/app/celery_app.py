@@ -1,7 +1,4 @@
 from celery import Celery
-from app.api.database import create_order as create_order_db
-from app.api.models import CreateOrderModel
-from sqlalchemy.ext.asyncio import AsyncSession
 from app.api import stock_exchange
 
 # Configure Celery to use the RabbitMQ broker

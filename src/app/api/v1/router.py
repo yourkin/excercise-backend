@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.api.database import get_session
-from app.api.models import CreateOrderModel, CreateOrderResponseModel
-from app.api.stock_exchange import place_order, OrderPlacementError
-from app.api.types import Order
-from app.celery_app import create_order
+from src.app.api.database import get_session
+from src.app.api.models import CreateOrderModel, CreateOrderResponseModel
+from src.app.api.stock_exchange import place_order, OrderPlacementError
+from src.app.api.types import Order
+from src.app.celery_app import create_order
 
 router = APIRouter()
 

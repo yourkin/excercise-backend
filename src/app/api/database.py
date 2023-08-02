@@ -1,8 +1,8 @@
-from sqlmodel import SQLModel, create_engine, select
+from sqlmodel import SQLModel, create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from app.api.models import OrderDB, CreateOrderModel
-from app.celery_app import celery_app
+from src.app.api.models import OrderDB, CreateOrderModel
+from src.app.celery_app import celery_app
 
 DATABASE_URL = "postgresql+asyncpg://postgres:postgres@db:5432/postgres"
 

@@ -1,6 +1,3 @@
-from app.main import app
-
-
 def test_create_order(client):
     response = client.post(
         "/v1/orders",
