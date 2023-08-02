@@ -18,14 +18,10 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install Poetry
-      run: curl -sSL https://install.python-poetry.org | python3 -
+    - name: Launch docker-compose services
+      run: |
+        docker-compose up -d
 
-#    - name: Install dependencies
-#      run: |
-#        python3 -m venv venv
-#        source venv/bin/activate
-#        poetry install
-
-    - name: Run tests
-      run: ./runalltests.sh
+        - name: Run Pytest
+          run: |
+            docker-compose exec -T web pytest -vs
