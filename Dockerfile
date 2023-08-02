@@ -1,54 +1,50 @@
-FROM python:3.11.4-bullseye
-
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+FROM python:3.11.4-bullseye as builder
 
 ENV PYTHONWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1
 
 RUN apt-get update \
-    && apt-get -y install netcat gcc curl \
+    && apt-get -y install netcat \
+#    gcc curl \
     && apt-get clean
 
-# Use the new PEP 518 recommended method
-ENV POETRY_HOME="/opt/poetry"
-ENV PATH="$POETRY_HOME/bin:$PATH"
-
-# Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
-RUN curl -sSL https://install.python-poetry.org | python3 -
-
-WORKDIR /app
-
-#
-## Copy only requirements, to cache them in docker layer
-#COPY poetry.lock pyproject.toml /app/
-#
-## Project initialization:
-#RUN poetry config virtualenvs.create false \
-#  && poetry install --no-interaction --no-ansi
-#
-## Copy poetry.lock* in case it doesn't exist in the repo
-#COPY ./pyproject.toml ./poetry.lock* ./
-#
-## Allow installing dev dependencies to run tests
-#ARG INSTALL_DEV=true
-#RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --no-dev ; fi"
-
-# add app
-COPY . /app
+RUN mkdir -p /excercise/
+WORKDIR /excercise
 
 # Install poetry
 RUN pip install poetry
 
-# Build the Python package
+COPY . /excercise
+
+# Project initialization:
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi
+
+
+# Build the project and output the .whl file to the dist/ folder
 RUN poetry build
 
-# Install the Python package
-RUN pip install dist/exercise_backend*.whl
+## Here we start a new build stage so that final image does not contain poetry tooling and python bytecode (.pyc)
+#FROM python:3.11.4-bullseye as runner
+#
+## Set environment variables
+#ENV PYTHONDONTWRITEBYTECODE 1
+#ENV PYTHONUNBUFFERED 1
+#
+#WORKDIR /excercise
+#
+## Here we copy from the "builder" stage only the libraries installed
+#COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+#
+## Copy the built .whl file from the builder stage
+#COPY --from=builder /app/dist/*.whl /excercise/
+
+# Install the package using pip
+RUN pip install /excercise/dist/*.whl
 
 # add entrypoint.sh
-COPY ./entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY ./entrypoint.sh /excercise/entrypoint.sh
+RUN chmod +x /excercise/entrypoint.sh
 
 # run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["/excercise/entrypoint.sh"]
