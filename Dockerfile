@@ -20,6 +20,8 @@ COPY . /ex_back
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
+# Delete the dist folder if it exists
+RUN rm -rf /ex_back/dist
 
 # Build the project and output the .whl file to the dist/ folder
 RUN poetry build

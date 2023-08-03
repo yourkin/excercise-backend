@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "REST API for the Stock Exchange"
 authors = ["Andrew Yourkin <andrew@yourkin.io>"]
 readme = "README.md"
-packages = [{include = "app", from = "src"}]
+packages = [{include = "ex_back", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
