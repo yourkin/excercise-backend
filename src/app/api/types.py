@@ -4,6 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, condecimal, conint, constr
 
+
 class OrderSide(str, Enum):
     BUY = "buy"
     SELL = "sell"

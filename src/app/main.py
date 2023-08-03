@@ -2,8 +2,8 @@ import logging
 
 from fastapi import FastAPI
 
-from src.app.api.v1.router import router as v1_router
-from src.app.api.database import create_tables
+from app.api.database import create_tables
+from app.api.v1.router import router as v1_router
 
 log = logging.getLogger("uvicorn")
 
