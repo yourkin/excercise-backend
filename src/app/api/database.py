@@ -13,13 +13,6 @@ async def get_session() -> Session:
     async with async_session() as session:
         yield session
 
-@celery_app.task
-def create_order(session: AsyncSession, order: CreateOrderModel):
-    db_order = OrderDB(**order.dict())
-    session.add(db_order)
-    session.commit()
-    session.refresh(db_order)
-    return db_order
 
 def create_tables():
     engine_sync = create_engine(DATABASE_URL)
