@@ -4,7 +4,7 @@ services:
 
   web:
     build: .
-    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    command: uvicorn ex_back.main:ex_back --reload --workers 1 --host 0.0.0.0 --port 8000
     ports:
       - 8000:8000
     environment:
@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./:/usr/src/app
+      - ./:/ex_back
 
   db:
     build:
@@ -39,9 +39,9 @@ services:
       - '15672:15672'
   worker:
     build: .
-    command: celery -A app.celery_app worker --loglevel=info
+    command: celery -A ex_back.celery_app worker --loglevel=info
     volumes:
-      - .:/usr/src/app
+      - .:/ex_back
     depends_on:
       - web
       - rabbitmq

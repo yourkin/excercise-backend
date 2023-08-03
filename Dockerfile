@@ -8,13 +8,13 @@ RUN apt-get update \
 #    gcc curl \
     && apt-get clean
 
-RUN mkdir -p /excercise/
-WORKDIR /excercise
+RUN mkdir -p /ex_back/
+WORKDIR /ex_back
 
 # Install poetry
 RUN pip install poetry
 
-COPY . /excercise
+COPY . /ex_back
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
@@ -31,20 +31,20 @@ RUN poetry build
 #ENV PYTHONDONTWRITEBYTECODE 1
 #ENV PYTHONUNBUFFERED 1
 #
-#WORKDIR /excercise
+#WORKDIR /ex_back
 #
 ## Here we copy from the "builder" stage only the libraries installed
 #COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 #
 ## Copy the built .whl file from the builder stage
-#COPY --from=builder /app/dist/*.whl /excercise/
+#COPY --from=builder /ex_back/dist/*.whl /ex_back/
 
 # Install the package using pip
-RUN pip install /excercise/dist/*.whl
+RUN pip install /ex_back/dist/*.whl
 
 # add entrypoint.sh
-COPY ./entrypoint.sh /excercise/entrypoint.sh
-RUN chmod +x /excercise/entrypoint.sh
+COPY ./entrypoint.sh /ex_back/entrypoint.sh
+RUN chmod +x /ex_back/entrypoint.sh
 
 # run entrypoint.sh
-ENTRYPOINT ["/excercise/entrypoint.sh"]
+ENTRYPOINT ["/ex_back/entrypoint.sh"]
