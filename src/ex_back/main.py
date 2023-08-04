@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 
 from ex_back.api.v1.router import router as v1_router
-from ex_back.db import create_tables
+from ex_back.database import init_db
 
 log = logging.getLogger("uvicorn")
 
@@ -20,7 +20,7 @@ app = create_application()
 @app.on_event("startup")
 async def startup_event():
     log.info("Starting up...")
-    create_tables()
+    await init_db()
 
 
 @app.on_event("shutdown")
