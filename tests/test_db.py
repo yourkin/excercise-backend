@@ -4,6 +4,8 @@ import asyncpg
 import pytest
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
+# asyncpg requires the postgresql:// scheme unlike SQLAlchemy for async operations
 if DATABASE_URL.startswith("postgresql+asyncpg://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://", 1)
 else:
