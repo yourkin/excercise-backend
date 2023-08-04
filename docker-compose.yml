@@ -3,7 +3,9 @@ version: '3.8'
 services:
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Development.Dockerfile
     command: uvicorn ex_back.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
