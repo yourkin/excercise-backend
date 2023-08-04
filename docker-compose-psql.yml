@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./db/scripts:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - PG_DB=${PG_DB}
+      - PG_USER=${PG_USER}
+      - PG_HOST=${PG_HOST}
+      - PG_PORT=${PG_PORT}
+      - TEST_DB=${TEST_DB}
+
+volumes:
+  postgres_data:
