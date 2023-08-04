@@ -12,22 +12,11 @@ services:
       - TESTING=${TESTING}
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
       - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
-    depends_on:
-      - db
+    networks:
+      - shared_network
     volumes:
       - ./:/ex_back
 
-  db:
-    build:
-      context: ./db
-      dockerfile: Dockerfile
-    volumes:
-        - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=${PG_USER}
-      - POSTGRES_PASSWORD=${PG_PASSWORD}
-
-volumes:
-  postgres_data:
+networks:
+  shared_network:
+    external: true
