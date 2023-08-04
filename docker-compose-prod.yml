@@ -6,12 +6,12 @@ services:
     build:
       context: .
       dockerfile: Production.Dockerfile
-    command: uvicorn ex_back.main:app --workers 1 --host 0.0.0.0 --port 8000
+    command: gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 ex_back.main:app
     ports:
       - "8000:8000"
     environment:
-      - ENVIRONMENT=${ENVIRONMENT}
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
+      - ENVIRONMENT=${ENVIRONMENT}
     networks:
       - ex_back_shared_network
     env_file:
