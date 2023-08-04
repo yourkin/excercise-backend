@@ -1,29 +1,18 @@
-from typing import Optional
+import uuid
 
-from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
+from sqlalchemy import Column, Enum, Float, Integer, String
+from sqlalchemy.dialects.postgresql import UUID
 
-from ex_back.api.types import Order, OrderSide, OrderType
-
-
-class CreateOrderModel(BaseModel):
-    type_: OrderType = Field(..., alias="type")
-    side: OrderSide
-    instrument: constr(min_length=12, max_length=12)
-    limit_price: Optional[condecimal(decimal_places=2)]
-    quantity: conint(gt=0)
-
-    @root_validator
-    def validator(cls, values: dict):
-        if values.get("type_") == "market" and values.get("limit_price"):
-            raise ValueError(
-                "Providing a `limit_price` is prohibited for type `market`"
-            )
-
-        if values.get("type_") == "limit" and not values.get("limit_price"):
-            raise ValueError("Attribute `limit_price` is required for type `limit`")
-
-        return values
+from ex_back.api.types import OrderSide, OrderType
+from ex_back.database import Base
 
 
-class CreateOrderResponseModel(Order):
-    pass
+class OrderModel(Base):
+    __tablename__ = "orders"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
+    type_ = Column(Enum(OrderType), nullable=False)
+    side = Column(Enum(OrderSide), nullable=False)
+    instrument = Column(String, nullable=False)
+    limit_price = Column(Float, nullable=True)
+    quantity = Column(Integer, nullable=False)

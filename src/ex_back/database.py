@@ -1,28 +1,17 @@
 import logging
 
-from sqlmodel import Session, SQLModel, create_engine
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 from ex_back.config import get_settings
 
 log = logging.getLogger("uvicorn")
 
-engine = create_engine(get_settings().sync_database_url, echo=True)
+DATABASE_URL = get_settings().sync_database_url
 
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
-
-
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-
-#
-# async def get_session() -> AsyncSession:
-#     async with async_session() as session:
-#         yield session
-
-
-if __name__ == "__main__":
-    create_db_and_tables()
+# Create base class for SQLAlchemy models
+Base = declarative_base()

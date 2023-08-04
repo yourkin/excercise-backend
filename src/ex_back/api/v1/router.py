@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter
 
-from ex_back.api.models import CreateOrderModel, CreateOrderResponseModel
+from ex_back.api.types import CreateOrderModel, CreateOrderResponseModel
 
 router = APIRouter()
 
