@@ -5,6 +5,7 @@ WORKDIR /ex_back
 
 ENV PYTHONWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1
+ENV PYTHONPATH=/ex_back/src
 
 RUN apt-get update \
     && apt-get -y install netcat gcc curl \
