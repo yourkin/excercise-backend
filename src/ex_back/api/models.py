@@ -29,7 +29,6 @@ class CreateOrderResponseModel(Order):
     pass
 
 
-#
 # class OrderDB(SQLModel, table=True):
 #     id: int = Field(default=None, primary_key=True, autoincrement=True)
 #     created_at: datetime = Field(default_factory=datetime.utcnow)
