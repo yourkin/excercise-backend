@@ -13,10 +13,11 @@ services:
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
       - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
     networks:
-      - shared_network
+      - ex_back_shared_network
     volumes:
       - ./:/ex_back
 
 networks:
-  shared_network:
+  ex_back_shared_network:
     external: true
+
