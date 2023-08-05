@@ -60,7 +60,7 @@ def test_create_order_missing_limit_price_limit_order(client):
     )
 
 
-def test_create_order_invalid_instrument(client):
+def test_create_order_invalid_instrument_short(client):
     data = {
         "type": "market",
         "side": "buy",
@@ -70,6 +70,18 @@ def test_create_order_invalid_instrument(client):
     response = client.post("/v1/orders", json=data)
     assert response.status_code == 422
     assert "ensure this value has at least 12 characters" in str(response.content)
+
+
+def test_create_order_invalid_instrument_long(client):
+    data = {
+        "type": "market",
+        "side": "buy",
+        "instrument": "ABCnthaoeurcg324shau",  # invalid instrument
+        "quantity": 10,
+    }
+    response = client.post("/v1/orders", json=data)
+    assert response.status_code == 422
+    assert "ensure this value has at most 12 characters" in str(response.content)
 
 
 def test_create_order_invalid_quantity(client):
