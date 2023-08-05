@@ -24,14 +24,15 @@ def test_create_order(client):
 
     # Assert that the response data matches the test data
     response_data = response.json()
-    assert response_data["type"] == order_data["type"]
-    assert response_data["side"] == order_data["side"]
-    assert response_data["instrument"] == order_data["instrument"]
-    assert response_data["limit_price"] == order_data["limit_price"]
-    assert response_data["quantity"] == order_data["quantity"]
+    assert response_data["order"]["type"] == order_data["type"]
+    assert response_data["order"]["side"] == order_data["side"]
+    assert response_data["order"]["instrument"] == order_data["instrument"]
+    assert response_data["order"]["limit_price"] == order_data["limit_price"]
+    assert response_data["order"]["quantity"] == order_data["quantity"]
+    assert "job_id" in response_data
 
     # Parse string to datetime object
-    created_at = dateutil.parser.parse(response_data["created_at"])
+    created_at = dateutil.parser.parse(response_data["order"]["created_at"])
     assert isinstance(created_at, datetime)
 
 

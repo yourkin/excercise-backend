@@ -55,3 +55,8 @@ class CreateOrderResponseModel(Order):
     class Config:
         orm_mode = True
         json_encoders = {UUID: str}
+
+
+class OrderWithJobID(BaseModel):
+    job_id: str
+    order: CreateOrderResponseModel

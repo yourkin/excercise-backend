@@ -1,19 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from ex_back.core.stock_exchange import OrderPlacementError, place_order
+from ex_back.core.concurrency import JobRunner
+from ex_back.core.stock_exchange import place_order
 from ex_back.database import get_db
 from ex_back.models import OrderModel
-from ex_back.types import CreateOrderModel, CreateOrderResponseModel
+from ex_back.types import CreateOrderModel, CreateOrderResponseModel, OrderWithJobID
 
 router = APIRouter()
+runner = JobRunner()
 
 
 @router.post(
     "/orders",
     status_code=201,
-    response_model=CreateOrderResponseModel,
+    response_model=OrderWithJobID,
     response_model_by_alias=True,
 )
 async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
@@ -26,6 +27,7 @@ async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
         quantity=model.quantity,
     )
     db.add(db_order)
+
     try:
         db.commit()
     except Exception as e:
@@ -35,11 +37,7 @@ async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
             detail=f"An error occurred while trying to create order. Detail: {e}",
         )
     db.refresh(db_order)
-    try:
-        place_order(db_order)
-    except OrderPlacementError as e:
-        return JSONResponse(
-            status_code=500,
-            content={"message": "Internal server error while placing the order"},
-        )
-    return CreateOrderResponseModel.from_orm(db_order)
+
+    job_id = runner.run(place_order, db_order)
+
+    return {"job_id": job_id, "order": CreateOrderResponseModel.from_orm(db_order)}
