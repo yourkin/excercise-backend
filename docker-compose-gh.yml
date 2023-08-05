@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./db/scripts:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+    networks:
+      - shared_network
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - PG_DB=${PG_DB}
+      - PG_USER=${PG_USER}
+      - PG_HOST=${PG_HOST}
+      - PG_PORT=${PG_PORT}
+      - TEST_DB=${TEST_DB}
+
+  web:
+    build:
+      context: .
+      dockerfile: Production.Dockerfile
+    command: gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 ex_back.main:app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
+      - ENVIRONMENT=${ENVIRONMENT}
+    networks:
+      - shared_network
+    env_file:
+      - .env
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+volumes:
+  postgres_data:
