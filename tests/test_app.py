@@ -31,19 +31,54 @@ def test_create_order(client):
     assert isinstance(created_at, datetime)
 
 
-def test_create_order_invalid_input(client):
-    response = client.post(
-        "/v1/orders",
-        json={
-            "type": "limit",
-            "side": "buy",
-            "instrument": "BTCUSD",
-            "quantity": 1,
-        },
-    )
+def test_create_order_invalid_limit_price_market_order(client):
+    data = {
+        "type": "market",
+        "side": "buy",
+        "instrument": "ABCDEF123456",
+        "limit_price": 100.0,
+        "quantity": 10,
+    }
+    response = client.post("/v1/orders", json=data)
     assert response.status_code == 422
-    data = response.json()
-    assert (
-        data["detail"][0]["msg"]
-        == "Attribute `limit_price` is required for type `limit`"
+    assert "Providing a `limit_price` is prohibited for type `market`" in str(
+        response.content
     )
+
+
+def test_create_order_missing_limit_price_limit_order(client):
+    data = {
+        "type": "limit",
+        "side": "buy",
+        "instrument": "ABCDEF123456",
+        "quantity": 10,
+    }
+    response = client.post("/v1/orders", json=data)
+    assert response.status_code == 422
+    assert "Attribute `limit_price` is required for type `limit`" in str(
+        response.content
+    )
+
+
+def test_create_order_invalid_instrument(client):
+    data = {
+        "type": "market",
+        "side": "buy",
+        "instrument": "ABC",  # invalid instrument
+        "quantity": 10,
+    }
+    response = client.post("/v1/orders", json=data)
+    assert response.status_code == 422
+    assert "ensure this value has at least 12 characters" in str(response.content)
+
+
+def test_create_order_invalid_quantity(client):
+    data = {
+        "type": "market",
+        "side": "buy",
+        "instrument": "ABCDEF123456",
+        "quantity": 0,  # invalid quantity
+    }
+    response = client.post("/v1/orders", json=data)
+    assert response.status_code == 422
+    assert "ensure this value is greater than 0" in str(response.content)

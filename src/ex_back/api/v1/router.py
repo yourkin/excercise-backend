@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from ex_back.api.types import CreateOrderModel, CreateOrderResponseModel
 from ex_back.database import get_db
 from ex_back.models import OrderModel
+from ex_back.types import CreateOrderModel, CreateOrderResponseModel
 
 router = APIRouter()
 

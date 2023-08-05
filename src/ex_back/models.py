@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy import Column, DateTime, Enum, Float, String, func
 from sqlalchemy.dialects.postgresql import UUID
 
-from ex_back.api.types import OrderSide, OrderType
 from ex_back.database import Base
+from ex_back.types import OrderSide, OrderType
 
 
 class OrderModel(Base):
