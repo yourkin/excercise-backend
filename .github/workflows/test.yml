@@ -40,10 +40,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Launch docker-compose services
+    - name: Set up network and run tests
       run: |
-        docker-compose -f docker-compose-psql.yml -f docker-compose-prod.yml up --build -d
-
-    - name: Run Pytest
-      run: |
+        docker network create ex_back_shared_network
         ./run_tests.sh
