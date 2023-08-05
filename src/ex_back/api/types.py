@@ -1,8 +1,9 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
+from pydantic.types import UUID
 
 
 class OrderSide(str, Enum):
@@ -48,4 +49,9 @@ class CreateOrderModel(BaseModel):
 
 
 class CreateOrderResponseModel(Order):
-    pass
+    id_: Union[str, UUID] = Field(..., alias="id")
+    type_: OrderType = Field(..., alias="type")
+
+    class Config:
+        orm_mode = True
+        json_encoders = {UUID: str}

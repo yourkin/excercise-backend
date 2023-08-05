@@ -19,6 +19,7 @@ def test_create_order(client):
     assert "id" in data
     assert "created_at" in data
 
+
 def test_create_order_invalid_input(client):
     response = client.post(
         "/v1/orders",
@@ -31,4 +32,7 @@ def test_create_order_invalid_input(client):
     )
     assert response.status_code == 422
     data = response.json()
-    assert data["detail"][0]["msg"] == "Attribute `limit_price` is required for type `limit`"
+    assert (
+        data["detail"][0]["msg"]
+        == "Attribute `limit_price` is required for type `limit`"
+    )

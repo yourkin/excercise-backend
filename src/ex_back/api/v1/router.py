@@ -1,8 +1,9 @@
-from datetime import datetime
-
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
 from ex_back.api.types import CreateOrderModel, CreateOrderResponseModel
+from ex_back.database import get_db
+from ex_back.models import OrderModel
 
 router = APIRouter()
 
@@ -13,15 +14,22 @@ router = APIRouter()
     response_model=CreateOrderResponseModel,
     response_model_by_alias=True,
 )
-async def create_order(model: CreateOrderModel):
-    fake_response = {
-        "id": "123",
-        "created_at": datetime.now(),
-        "type": model.type_,
-        "side": model.side,
-        "instrument": model.instrument,
-        "limit_price": model.limit_price,
-        "quantity": model.quantity,
-    }
-
-    return fake_response
+async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
+    # Convert the Pydantic model to SQLAlchemy model
+    db_order = OrderModel(
+        type=model.type_,
+        side=model.side,
+        instrument=model.instrument,
+        limit_price=model.limit_price,
+        quantity=model.quantity,
+    )
+    db.add(db_order)
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=400, detail="An error occurred while trying to create order."
+        )
+    db.refresh(db_order)
+    return CreateOrderResponseModel.from_orm(db_order)
