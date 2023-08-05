@@ -10,8 +10,6 @@ services:
       - ./db/scripts:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
-    networks:
-      - shared_network
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
@@ -31,8 +29,6 @@ services:
     environment:
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
       - ENVIRONMENT=${ENVIRONMENT}
-    networks:
-      - shared_network
     env_file:
       - .env
     restart: unless-stopped
