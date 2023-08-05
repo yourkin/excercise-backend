@@ -7,7 +7,7 @@ Additionally, it contains [a building block](src/ex_back/core/stock_exchange.py)
 
 The folder [tests](./tests) contains the setup for tests with the framework pytest.
 
-The challenge in this repository is a simplified version of what we are dealing with at lemon.markets 🍋. 
+The challenge is to implement the missing parts in the API and to make it scalable and reliable for a high volume of requests applying modern software engineering principles.  
 
 ## Your task
 
