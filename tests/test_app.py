@@ -15,6 +15,10 @@ def test_create_order(client):
     # Make a request to the server
     response = client.post("/v1/orders/", json=order_data)
 
+    # Print full response when test fails
+    if response.status_code != 201:
+        print(f"Response: {response.status_code}, {response.headers}, {response.text}")
+
     # Assert that the response status code is 201 (Created)
     assert response.status_code == 201
 
