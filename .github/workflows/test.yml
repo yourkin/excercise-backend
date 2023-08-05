@@ -26,6 +26,9 @@ jobs:
     - name: Create .env
       run: touch .env
 
+    - name: Create Docker network
+      run: docker network create ex_back_shared_network
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
