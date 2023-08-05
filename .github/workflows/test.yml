@@ -3,25 +3,41 @@ name: Run Tests
 on:
   push:
     branches:
-      - prototype
+      - sqlalchemy
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PG_USER: excercise_user
+      PG_PASSWORD: excercise_password
+      PG_DB: excercise_db
+      PG_HOST: db
+      PG_PORT: 5432
+      TEST_DB: excercise_test_db
+      RABBIT_MQ_URL: amqp://guest:guest@localhost:5672/
+      CELERY_BROKER_URL: amqp://guest:guest@localhost:5672/
+      ENVIRONMENT: production
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
       with:
-        python-version: '3.11'
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
 
     - name: Launch docker-compose services
       run: |
-        docker-compose up -d
+        docker-compose -f docker-compose-psql.yml -f docker-compose-prod.yml up --build -d
 
     - name: Run Pytest
       run: |
-        docker-compose exec -T web pytest -vs
+        ./run_tests.sh
