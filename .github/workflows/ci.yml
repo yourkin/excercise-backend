@@ -1,0 +1,38 @@
+# .github/workflows/ci.yml
+name: Python CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install isort black autoflake
+
+      - name: Run isort
+        run: isort --profile=black .
+
+      - name: Run black
+        run: black .
+
+      - name: Run autoflake
+        run: autoflake --remove-all-unused-imports --recursive --in-place .
+
+      - name: Commit and push if it was necessary
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply auto fixes from Python CI
+          commit_user: GitHub Actions
+          commit_user_email: actions@github.com
+          commit_author: GitHub Actions <actions@github.com>
