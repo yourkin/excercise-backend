@@ -5,7 +5,12 @@ from ex_back.core.concurrency import JobRunner
 from ex_back.core.stock_exchange import place_order
 from ex_back.database import get_db
 from ex_back.models import OrderModel
-from ex_back.types import CreateOrderModel, CreateOrderResponseModel, OrderWithJobID
+from ex_back.types import (
+    CreateOrderModel,
+    CreateOrderResponseModel,
+    JobModel,
+    OrderWithJobID,
+)
 
 router = APIRouter()
 runner = JobRunner()
@@ -41,3 +46,16 @@ async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
     job_id = runner.run(place_order, db_order)
 
     return {"job_id": job_id, "order": CreateOrderResponseModel.from_orm(db_order)}
+
+
+@router.get(
+    "/jobs/{job_id}",
+    response_model=JobModel,
+    responses={404: {"description": "Job not found"}},
+)
+def get_job_status(job_id: str):
+    try:
+        status = runner.check_status(job_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return JobModel(job_id=job_id, status=status)

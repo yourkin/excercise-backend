@@ -5,6 +5,8 @@ from typing import Optional, Union
 from pydantic import BaseModel, Field, condecimal, conint, constr, root_validator
 from pydantic.types import UUID
 
+from ex_back.core.concurrency import JobStatus
+
 
 class OrderSide(str, Enum):
     BUY = "buy"
@@ -60,3 +62,8 @@ class CreateOrderResponseModel(Order):
 class OrderWithJobID(BaseModel):
     job_id: str
     order: CreateOrderResponseModel
+
+
+class JobModel(BaseModel):
+    job_id: str
+    status: JobStatus
