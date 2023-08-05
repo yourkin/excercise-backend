@@ -23,3 +23,9 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def create_db_and_tables():
+    log.info("Creating database and tables...")
+    Base.metadata.create_all(bind=engine)
+    log.info("Database and tables created.")
