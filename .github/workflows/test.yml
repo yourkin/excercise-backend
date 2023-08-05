@@ -40,7 +40,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Set up network and run tests
+    - name: Run tests
       run: |
-        docker network create ex_back_shared_network
-        ./run_tests.sh
+        docker-compose -f docker-compose-psql.yml up --build -d
+        sleep 20  # Wait for DB and other services to fully start
+        docker-compose -f docker-compose-prod.yml run web pytest -vs # run tests 
