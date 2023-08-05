@@ -29,7 +29,8 @@ async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(
-            status_code=400, detail="An error occurred while trying to create order."
+            status_code=400,
+            detail=f"An error occurred while trying to create order. Detail: {e}",
         )
     db.refresh(db_order)
     return CreateOrderResponseModel.from_orm(db_order)
