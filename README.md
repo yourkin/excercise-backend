@@ -9,7 +9,7 @@ The folder [tests](./tests) contains the setup for tests with the framework pyte
 
 The challenge is to implement the missing parts in the API and to make it scalable and reliable for a high volume of requests applying modern software engineering principles.  
 
-## Your task
+## Main task
 
 We would like you to finalize the missing parts in this repository so that the following requirements are fulfilled:
 1. a valid request to `POST /orders` should result in the order being stored in a database of your choice.
@@ -23,9 +23,6 @@ Additionally, please add some tests and document how you would test the applicat
 For the implementation you can choose to use this Python setup or implement it in Javascript/Typescript.
 
 Please include a `solution.md` file where you document your decisions, assumptions, and also improvements you would like to incorporate in the future.
-
-We value your time ⏰, so we do not expect you to spend more than 4 hours preparing the solution. 🤗 
-Focus on implementing the main task first and afterwards jump on additional improvements as you see fit.
 
 ### Bonus tasks
 * How would you change the system if we would receive a high volume of async updates to the orders placed through a socket connection on the stock exchange, e.g. execution information? Please outline the changes in the `solution.md`.
