@@ -9,7 +9,7 @@ The folder [tests](./tests) contains the setup for tests with the framework pyte
 
 The challenge is to implement the missing parts in the API and to make it scalable and reliable for a high volume of requests applying modern software engineering principles.  
 
-## Your task
+## Main task
 
 We would like you to finalize the missing parts in this repository so that the following requirements are fulfilled:
 1. a valid request to `POST /orders` should result in the order being stored in a database of your choice.
