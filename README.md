@@ -27,6 +27,12 @@ A `solution.md` file documents the decisions, assumptions, and also improvements
 
 Before running the application, environment variables must be set in the .env file. An example of the .env file can be found in the .env.example file.
 
+## Running the application
+
+The application can be run locally in development mode by executing the `run.sh` script in the root directory of the repository.
+Depending on the environment variables set, the application will run the development server on port 8000 or production server on port 80.
+Navigate to /docs to see the API documentation.
+
 ## Running tests
 
 Running the tests locally is as simple as running the `run_tests.sh` script in the root directory of the repository.
