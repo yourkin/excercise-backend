@@ -1,6 +1,4 @@
-Here's a preliminary version of what a `solution.md` could look like;
-
-  
+[in progress]
 
 # Documentation, for the Solution
 

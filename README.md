@@ -23,8 +23,13 @@ Additionally, tests and documentation on how to test the application as a whole 
 
 A `solution.md` file documents the decisions, assumptions, and also improvements that might be incorporated in the future.
 
-### Bonus tasks
-* How would the system change if we would receive a high volume of async updates to the orders placed through a socket connection on the stock exchange, e.g. execution information? The changes are outlined in the `solution.md`.
+## Environment variables
+
+Before running the application, environment variables must be set in the .env file. An example of the .env file can be found in the .env.example file.
+
+## Running tests
+
+Running the tests locally is as simple as running the `run_tests.sh` script in the root directory of the repository.
 
 ## Code quality
 
