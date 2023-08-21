@@ -30,3 +30,13 @@ A `solution.md` file documents the decisions, assumptions, and also improvements
 
 In order to keep a certain amount of code quality, we are using pre-commit hooks
 in this repository, which are installed by a 3rd-party tool called [pre-commit](https://pre-commit.com/).
+
+## Branches
+
+The repository contains branches that each represent a distinct approach to the problem, use different technologies, or are in different stages of development.
+
+### Current branch
+
+`plain_database` 
+
+This branch contains a solution that uses a plain database to store the orders. It is a basic solution and does not contain any additional features.
