@@ -30,3 +30,15 @@ A `solution.md` file documents the decisions, assumptions, and also improvements
 
 In order to keep a certain amount of code quality, we are using pre-commit hooks
 in this repository, which are installed by a 3rd-party tool called [pre-commit](https://pre-commit.com/).
+
+## Branches
+
+The repository contains branches that each represent a distinct approach to the problem, use different technologies, or are in different stages of development.
+
+### Current branch
+
+`concurrency` 
+
+Certainly, I'll condense it further:
+
+This branch offers an enhancement over the `plain_database` branch by using the `concurrent.futures` module, part of the standard library, to execute prolonged functions without blocking the main thread. The POST /orders endpoint now returns the Job ID, allowing clients to monitor progress via the GET /orders/{job_id} endpoint, implemented using our JobRunner class.
