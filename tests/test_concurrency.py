@@ -2,24 +2,12 @@ import asyncio
 
 import pytest
 
-from ex_back.core.concurrency import JobRunner, JobStatus
-from ex_back.core.stock_exchange import place_order
-from ex_back.models import OrderSide, OrderType
-
-job_runner = JobRunner()
+from ex_back.core.concurrency import JobStatus
 
 
-def test_create_order_with_job_id(client):
-    # Test data
-    order_data = {
-        "type": OrderType.LIMIT.value,
-        "side": OrderSide.BUY.value,
-        "instrument": "abcdefghijkl",
-        "limit_price": 150.00,
-        "quantity": 10,
-    }
+def test_create_order_with_job_id(client, order_stub):
     # Make a request to the server
-    response = client.post("/v1/orders/", json=order_data)
+    response = client.post("/v1/orders/", json=order_stub)
 
     # Assert that the response status code is 201 (Created)
     assert response.status_code == 201
@@ -30,22 +18,22 @@ def test_create_order_with_job_id(client):
 
 
 def test_get_job_status(client, order_stub, job_id):
-    job_id = job_runner.run(place_order, order_stub)
     response = client.get(f"/v1/jobs/{job_id}")
+    assert response.json()["job_id"] == job_id
     assert response.status_code == 200
     assert response.json()["status"] in [status.value for status in JobStatus]
 
 
-def test_get_nonexistent_job_status(client, job_id):
-    response = client.get(f"/v1/jobs/{job_id}")
+def test_get_nonexistent_job_status(client, order_id, order_stub):
+    response = client.get(
+        f"/v1/jobs/{order_id}"
+    )  # deliberately using order_id to check for the error
     assert response.status_code == 404
-    assert response.json()["detail"] == f"No job with ID {job_id}"
+    assert response.json()["detail"] == f"No job with ID {order_id}"
 
 
 @pytest.mark.asyncio
-async def test_get_completed_job_status(client, order_stub):
-    job_id = job_runner.run(place_order, order_stub)
-
+async def test_get_completed_job_status(client, job_id, order_stub):
     async def wait_for_job_to_complete():
         while True:
             response = client.get(f"/v1/jobs/{job_id}")
