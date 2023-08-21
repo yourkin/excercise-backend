@@ -48,6 +48,6 @@ The repository contains branches that each represent a distinct approach to the 
 
 ### Current branch
 
-`concurrency` 
+`alembic` 
 
-This branch offers an enhancement over the `plain_database` branch by using the `concurrent.futures` module, part of the standard library, to execute prolonged functions without blocking the main thread. The POST /orders endpoint now returns the Job ID, allowing clients to monitor progress via the GET /orders/{job_id} endpoint, implemented using our JobRunner class.
+This branch offers an enhancement over the `concurrency` branch by introducing Alembic for database migrations. Alembic provides version control to the database schema, ensuring smooth updates and changes as the project evolves. 

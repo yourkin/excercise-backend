@@ -18,6 +18,7 @@ requests = "^2.31.0"
 httpx = "^0.24.1"
 sqlalchemy = "^2.0.19"
 gunicorn = {version = "^21.2.0", optional = true}
+alembic = "^1.11.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4.0"
