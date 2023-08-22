@@ -1,5 +1,6 @@
 from logging.config import fileConfig
 
+from decouple import config as decouple_config
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
@@ -13,16 +14,21 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
+# Add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = None
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
+# Fetch database configurations using python-decouple
+PG_USER = decouple_config("PG_USER")
+PG_PASSWORD = decouple_config("PG_PASSWORD")
+PG_DB = decouple_config("PG_DB")
+PG_HOST = decouple_config("PG_HOST")
+PG_PORT = decouple_config("PG_PORT")
+SQLALCHEMY_DATABASE_URL = (
+    f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DB}"
+)
 
 
 def run_migrations_offline() -> None:
@@ -37,9 +43,9 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    # Use the SQLALCHEMY_DATABASE_URL instead of fetching from alembic.ini
     context.configure(
-        url=url,
+        url=SQLALCHEMY_DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -56,8 +62,9 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    # Update connectable to use SQLALCHEMY_DATABASE_URL
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        {"sqlalchemy.url": SQLALCHEMY_DATABASE_URL},
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
