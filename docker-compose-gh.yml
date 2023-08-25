@@ -20,7 +20,6 @@ services:
       - PG_HOST=${PG_HOST}
       - PG_PORT=${PG_PORT}
       - TEST_DB=${TEST_DB}
-      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
 
   web:
     depends_on:
@@ -34,6 +33,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
       - ENVIRONMENT=${ENVIRONMENT}
+      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
     networks:
       - backend
     env_file:
