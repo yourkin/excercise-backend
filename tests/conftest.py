@@ -1,21 +1,35 @@
 import uuid
 
 import pytest
-from starlette.testclient import TestClient
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from ex_back.database import create_db_and_tables
+from ex_back.config import get_settings
+from ex_back.database import Base, get_db
 from ex_back.main import app
 from ex_back.models import OrderSide, OrderType
+
+TEST_DATABASE_URL = get_settings().sync_test_database_url
+
+engine = create_engine(TEST_DATABASE_URL)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base.metadata.create_all(bind=engine)
+
+
+def override_get_db():
+    try:
+        db = TestingSessionLocal()
+        yield db
+    finally:
+        db.close()
 
 
 @pytest.fixture
 def client() -> TestClient:
+    app.dependency_overrides[get_db] = override_get_db
     return TestClient(app)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_database():
-    create_db_and_tables()
 
 
 @pytest.fixture

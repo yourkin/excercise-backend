@@ -2,6 +2,8 @@ from datetime import datetime
 
 import dateutil.parser
 
+from ex_back.types import OrderType
+
 
 def test_create_order(client):
     # Test data
@@ -80,7 +82,7 @@ def test_create_order_invalid_instrument_short(client):
 def test_create_order_invalid_instrument_long(client):
     data = {
         "type": "market",
-        "side": "buy",
+        "side": OrderType.MARKET.value,
         "instrument": "ABCnthaoeurcg324shau",  # invalid instrument
         "quantity": 10,
     }
@@ -99,3 +101,23 @@ def test_create_order_invalid_quantity(client):
     response = client.post("/v1/orders", json=data)
     assert response.status_code == 422
     assert "ensure this value is greater than 0" in str(response.content)
+
+
+def test_list_orders(client, order_stub):
+    # Given
+    # Add an order to the database
+    order_response = client.post("/v1/orders/", json=order_stub)
+    assert order_response.status_code == 201
+    expected_order = order_response.json()["order"]
+
+    # When
+    # Fetch orders from the '/orders' endpoint
+    response = client.get("/v1/orders")
+
+    # Then
+    assert response.status_code == 200
+    orders = response.json()
+
+    # Check the returned orders contain the order we added
+    assert len(orders) > 0
+    assert expected_order in orders

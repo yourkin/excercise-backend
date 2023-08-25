@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -46,6 +48,16 @@ async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
     job_id = runner.run(place_order, db_order)
 
     return {"job_id": job_id, "order": CreateOrderResponseModel.from_orm(db_order)}
+
+
+@router.get(
+    "/orders",
+    response_model=List[CreateOrderResponseModel],
+    response_model_by_alias=True,
+)
+def list_orders(db: Session = Depends(get_db)):
+    db_orders = db.query(OrderModel).all()
+    return [CreateOrderResponseModel.from_orm(order) for order in db_orders]
 
 
 @router.get(

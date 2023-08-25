@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     def sync_database_url(self) -> str:
         return self.database_url.replace("+asyncpg", "")
 
+    @property
+    def sync_test_database_url(self) -> str:
+        return self.test_database_url.replace("+asyncpg", "")
+
 
 @lru_cache()
 def get_settings() -> Settings:
