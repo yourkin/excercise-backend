@@ -11,7 +11,6 @@ services:
       - "8000:80"
     environment:
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
-      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
       - ENVIRONMENT=${ENVIRONMENT}
     networks:
       - ex_back_shared_network

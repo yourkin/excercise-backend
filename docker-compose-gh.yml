@@ -15,12 +15,6 @@ services:
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
-      - PG_DB=${PG_DB}
-      - PG_USER=${PG_USER}
-      - PG_HOST=${PG_HOST}
-      - PG_PORT=${PG_PORT}
-      - TEST_DB=${TEST_DB}
-      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
 
   web:
     depends_on:
@@ -33,6 +27,7 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
+      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
       - ENVIRONMENT=${ENVIRONMENT}
     networks:
       - backend
