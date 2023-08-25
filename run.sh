@@ -7,7 +7,7 @@ source .env
 docker-compose -f docker-compose-psql.yml up -d
 
 # Start RabbitMQ
-docker-compose -f docker-compose-rabbitmq.yml up -d
+docker-compose -f docker-compose.rabbitmq-redis.yml up -d
 
 # Wait for PostgreSQL to start
 ./wait-for-it.sh db:5432 --timeout=30
