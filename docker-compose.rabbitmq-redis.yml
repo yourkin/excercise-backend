@@ -12,6 +12,13 @@ services:
     networks:
       - ex_back_shared_network
 
+  redis:
+    image: "redis"
+    ports:
+      - "6379:6379"
+    networks:
+      - ex_back_shared_network
+
 networks:
   ex_back_shared_network:
     external: true
