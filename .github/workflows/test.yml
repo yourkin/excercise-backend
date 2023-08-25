@@ -37,6 +37,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
+    - name: Print TEST_DATABASE_URL
+      run: echo $TEST_DATABASE_URL
+
     - name: Run tests
       run: |
         docker-compose -f docker-compose-gh.yml run web pytest -vvs 
