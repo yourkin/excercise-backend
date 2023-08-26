@@ -45,8 +45,8 @@ RUN poetry build
 RUN pip install /ex_back/dist/*.whl
 
 # add entrypoint.sh
-COPY ./entrypoint.sh /ex_back/entrypoint.sh
-RUN chmod +x /ex_back/entrypoint.sh
+COPY ./scripts/entrypoint.sh /ex_back/scripts/entrypoint.sh
+RUN chmod +x /ex_back/scripts/entrypoint.sh
 
-# run entrypoint.sh
-ENTRYPOINT ["/ex_back/entrypoint.sh"]
+## run entrypoint.sh
+ENTRYPOINT ["/ex_back/scripts/entrypoint.sh"]
