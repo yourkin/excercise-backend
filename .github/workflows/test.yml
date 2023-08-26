@@ -39,4 +39,4 @@ jobs:
 
     - name: Run tests
       run: |
-        docker-compose -f docker-compose-gh.yml run web pytest -vvs 
+        scripts/run.sh test 
