@@ -1,5 +1,3 @@
-import uuid
-
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -33,18 +31,21 @@ def client() -> TestClient:
 
 
 @pytest.fixture
-def order_id():
-    return str(uuid.uuid4())
+def event_id(client, order_stub):
+    # Create an order and obtain its ID
+    response = client.post("/v1/orders/", json=order_stub)
+    return response.json()["event_id"]
 
 
-@pytest.fixture(scope="function")
-def job_id(client, order_stub):
-    job_id = client.post("/v1/orders/", json=order_stub).json()["job_id"]
-    return job_id
+#
+# @pytest.fixture(scope="function")
+# def job_id(client, order_stub):
+#     job_id = client.post("/v1/orders/", json=order_stub).json()["job_id"]
+#     return job_id
 
 
 @pytest.fixture
-def order_stub(order_id):
+def order_stub():
     order_data = {
         "type": OrderType.LIMIT.value,
         "side": OrderSide.BUY.value,

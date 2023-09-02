@@ -1,53 +1,89 @@
+import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from ex_back.core.concurrency import JobRunner
-from ex_back.core.stock_exchange import place_order
 from ex_back.database import get_db
 from ex_back.models import OrderModel
 from ex_back.types import (
     CreateOrderModel,
+    CreateOrderResponse,
     CreateOrderResponseModel,
-    JobModel,
-    OrderWithJobID,
+    EventOutboxResponse,
+    EventType,
+    OrderCreated,
 )
+from shared.managers import OutboxEventManager
 
 router = APIRouter()
-runner = JobRunner()
 
 
 @router.post(
     "/orders",
     status_code=201,
-    response_model=OrderWithJobID,
+    response_model=CreateOrderResponse,
     response_model_by_alias=True,
 )
-async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
-    # Convert the Pydantic model to SQLAlchemy model
-    db_order = OrderModel(
+async def create_order(
+    model: CreateOrderModel, db: Session = Depends(get_db)
+) -> CreateOrderResponse:
+    # Create event for order creation
+    event = OrderCreated(
+        id_=uuid.uuid4(),
         type=model.type_,
         side=model.side,
         instrument=model.instrument,
         limit_price=model.limit_price,
         quantity=model.quantity,
     )
-    db.add(db_order)
+    # Using manager to store the event
+    manager = OutboxEventManager(db)
+    outbox_event = manager.save(EventType.ORDER_SUBMITTED, event.json())
 
-    try:
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail=f"An error occurred while trying to create order. Detail: {e}",
-        )
-    db.refresh(db_order)
+    # The actual handling of the event will be done by an asynchronous worker
+    # that processes the events in the outbox table
 
-    job_id = runner.run(place_order, db_order)
+    response = CreateOrderResponse(
+        event_id=outbox_event.id,
+        created_at=outbox_event.created_at,
+        event_type=outbox_event.event_type,
+        status=outbox_event.status,
+    )
 
-    return {"job_id": job_id, "order": CreateOrderResponseModel.from_orm(db_order)}
+    return response
+
+
+@router.get(
+    "/events/outbox",
+    response_model=List[EventOutboxResponse],
+    response_model_by_alias=True,
+)
+def list_outbox_events(db: Session = Depends(get_db)) -> List[EventOutboxResponse]:
+    manager = OutboxEventManager(db)
+    outbox_events = manager.get_all_events()
+
+    # Convert SQLAlchemy model instances to Pydantic model instances
+    event_responses = [EventOutboxResponse.from_orm(event) for event in outbox_events]
+
+    return event_responses
+
+
+@router.get(
+    "/events/outbox/{event_id}",
+    response_model=EventOutboxResponse,
+    response_model_by_alias=True,
+)
+def get_outbox_event(
+    event_id: int, db: Session = Depends(get_db)
+) -> EventOutboxResponse:
+    manager = OutboxEventManager(db)
+    outbox_event = manager.get_event_by_id(event_id)
+
+    if not outbox_event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    return EventOutboxResponse.from_orm(outbox_event)
 
 
 @router.get(
@@ -55,19 +91,6 @@ async def create_order(model: CreateOrderModel, db: Session = Depends(get_db)):
     response_model=List[CreateOrderResponseModel],
     response_model_by_alias=True,
 )
-def list_orders(db: Session = Depends(get_db)):
+def list_orders(db: Session = Depends(get_db)) -> List[CreateOrderResponseModel]:
     db_orders = db.query(OrderModel).all()
     return [CreateOrderResponseModel.from_orm(order) for order in db_orders]
-
-
-@router.get(
-    "/jobs/{job_id}",
-    response_model=JobModel,
-    responses={404: {"description": "Job not found"}},
-)
-def get_job_status(job_id: str):
-    try:
-        status = runner.check_status(job_id)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    return JobModel(job_id=job_id, status=status)
