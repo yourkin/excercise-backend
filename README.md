@@ -18,10 +18,7 @@ We finalize the missing parts in this repository so that the following requireme
 4. in case of an error in the endpoint it should return the status code 500 and the body `{"message": "Internal server error while placing the order"}` 
 5. the API should be highly scalable and reliable. The reliability of the provided stock exchange should not impact the reliability of the `POST /orders` endpoint
 
-
 Additionally, tests and documentation on how to test the application as a whole and its pieces.
-
-A `solution.md` file documents the decisions, assumptions, and also improvements that might be incorporated in the future.
 
 ## Environment variables
 
