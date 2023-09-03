@@ -1,4 +1,4 @@
 #!/bin/sh
 
-celery -A event_publisher.app worker --loglevel=info
+celery -A messaging.app worker --loglevel=info
 

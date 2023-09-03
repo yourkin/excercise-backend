@@ -17,9 +17,11 @@ Session = sessionmaker(bind=engine)
 @app.task
 def publish_events_to_rabbitmq(use_test_db: bool = False):
     if use_test_db:
-        TEST_DATABASE_URL = get_settings().sync_test_database_url
-        engine = create_engine(TEST_DATABASE_URL)
-        Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        DATABASE_URL = get_settings().sync_test_database_url
+    else:
+        DATABASE_URL = get_settings().sync_database_url
+    engine = create_engine(DATABASE_URL)
+    Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     with Session() as session:
         event_store_manager = EventStoreManager(session)

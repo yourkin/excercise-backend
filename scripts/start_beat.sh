@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-celery -A event_publisher.app beat --loglevel=info
+celery -A messaging.app beat --loglevel=info

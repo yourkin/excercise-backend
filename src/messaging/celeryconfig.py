@@ -4,7 +4,7 @@ from ex_back.config import get_settings
 
 broker_url = get_settings().broker_url
 
-imports = ("messaging.tasks.order_tasks",)
+imports = ("messaging.tasks.producer", "messaging.tasks.consumer")
 
 
 # result_backend = 'redis://localhost:6379/0'
@@ -39,9 +39,16 @@ timezone = "UTC"
 beat_schedule = {
     # Executes every minute
     "run-every-minute": {
-        "task": "messaging.tasks.order_tasks.publish_events_to_rabbitmq",  # The name of the task to execute
+        "task": "messaging.tasks.producer.publish_events_to_rabbitmq",  # The name of the task to execute
         "schedule": timedelta(minutes=1),
         "args": (),  # Arguments passed to the task. Can be omitted if not required.
+    },
+    "consume_order_messages_once": {
+        "task": "messaging.tasks.consumer.consume_order_messages",
+        "schedule": timedelta(seconds=10),  # run 10 seconds after starting
+        "options": {
+            "expires": 9
+        },  # task expires after 9 seconds to ensure it only runs once
     },
 }
 

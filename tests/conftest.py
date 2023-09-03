@@ -7,7 +7,7 @@ from ex_back.config import get_settings
 from ex_back.database import Base, get_db
 from ex_back.main import app
 from ex_back.models import EventStore, OrderSide, OrderType
-from messaging.tasks.publisher_tasks import publish_events_to_rabbitmq
+from messaging.tasks.producer import publish_events_to_rabbitmq
 
 TEST_DATABASE_URL = get_settings().sync_test_database_url
 
