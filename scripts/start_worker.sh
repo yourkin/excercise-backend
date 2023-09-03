@@ -1,3 +1,4 @@
 #!/bin/sh
 
-celery -A event_publisher.tasks worker --beat --loglevel=info
+celery -A event_publisher.app worker --loglevel=info
+

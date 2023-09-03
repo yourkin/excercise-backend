@@ -16,6 +16,8 @@ services:
       - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
     networks:
       - ex_back_shared_network
     volumes:

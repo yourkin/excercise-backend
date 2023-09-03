@@ -28,6 +28,9 @@ COPY . /ex_back
 COPY ./scripts/start_worker.sh /ex_back/scripts/start_worker.sh
 RUN chmod +x /ex_back/scripts/start_worker.sh
 
+COPY ./scripts/start_beat.sh /ex_back/scripts/start_beat.sh
+RUN chmod +x /ex_back/scripts/start_beat.sh
+
 WORKDIR /ex_back/src/
 
 CMD ["/start_worker.sh"]

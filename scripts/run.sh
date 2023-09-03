@@ -17,8 +17,9 @@ docker-compose -f docker-compose-psql.yml up -d
 
 case "$1" in
     stack)
-        # Start RabbitMQ for 'stack'
+        # Start RabbitMQ and Celery for 'stack'
         docker-compose -f docker-compose.rabbitmq-redis.yml up -d
+        docker-compose -f docker-compose.celery.yml up -d
 
         if [[ "${ENVIRONMENT}" == "production" ]]; then
           docker-compose -f docker-compose-prod.yml up --build
@@ -27,8 +28,9 @@ case "$1" in
         fi
         ;;
     test)
-        # Start RabbitMQ for 'test'
+        # Start RabbitMQ and Celery for 'test'
         docker-compose -f docker-compose.rabbitmq-redis.yml up -d
+        docker-compose -f docker-compose.celery.yml up -d
 
         if [[ "${ENVIRONMENT}" == "production" ]]; then
           docker-compose -f docker-compose-prod.yml run web pytest -vs ../tests

@@ -2,14 +2,16 @@ import json
 
 import pika
 
+from ex_back.config import get_settings
+
 
 class RabbitMQPublisher:
     def __init__(
         self,
         host: str,
         queue_name: str,
-        exchange_name: str,
         exchange_type: str = "direct",
+        exchange_name: str = "",
     ):
         self._host: str = host
         self._queue_name: str = queue_name
@@ -19,8 +21,11 @@ class RabbitMQPublisher:
         self._channel: pika.Channel = None
 
     def __enter__(self) -> "RabbitMQPublisher":
+        credentials = pika.PlainCredentials(
+            username=get_settings().rabbitmq_user, password=get_settings().rabbitmq_pass
+        )
         self._connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=self._host)
+            pika.ConnectionParameters(host=self._host, credentials=credentials)
         )
         self._channel = self._connection.channel()
 

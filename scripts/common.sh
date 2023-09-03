@@ -16,10 +16,12 @@ function cleanup() {
       docker-compose -f docker-compose-prod.yml stop
       docker-compose -f docker-compose-psql.yml stop
       docker-compose -f docker-compose.rabbitmq-redis.yml stop
+      docker-compose -f docker-compose.celery.yml stop
     else
       docker-compose -f docker-compose-dev.yml down
       docker-compose -f docker-compose-psql.yml down
       docker-compose -f docker-compose.rabbitmq-redis.yml down
+      docker-compose -f docker-compose.celery.yml down
     fi
 
     # Return to the original directory

@@ -1,9 +1,11 @@
 import logging
 
-from celery import shared_task
 from sqlalchemy.orm import sessionmaker
 
+from event_publisher.app import app
 from event_publisher.messaging.rabbitmq_publisher import RabbitMQPublisher
+from ex_back.config import get_settings
+from ex_back.database import engine
 from shared.managers import EventStoreManager, OutboxEventManager
 
 logger = logging.getLogger(__name__)
@@ -11,7 +13,7 @@ logger = logging.getLogger(__name__)
 Session = sessionmaker(bind=engine)
 
 
-@shared_task
+@app.task
 def publish_events_to_rabbitmq():
     with Session() as session:
         event_store_manager = EventStoreManager(session)
@@ -22,7 +24,11 @@ def publish_events_to_rabbitmq():
             logger.info("No unprocessed events found.")
             return
 
-        with RabbitMQPublisher() as publisher:
+        with RabbitMQPublisher(
+            host=get_settings().rabbitmq_host,
+            queue_name="order",
+            exchange_name="order_exchange",
+        ) as publisher:
             for outbox_event in unprocessed_outbox_events:
                 try:
                     with session.begin():
