@@ -3,11 +3,11 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from event_publisher.app import app
-from event_publisher.messaging.rabbitmq_publisher import RabbitMQPublisher
 from ex_back.config import get_settings
 from ex_back.database import engine
-from shared.managers import EventStoreManager, OutboxEventManager
+from messaging.app import app
+from shared.managers.events import EventStoreManager, OutboxEventManager
+from shared.managers.messaging import RabbitMQManager
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def publish_events_to_rabbitmq(use_test_db: bool = False):
             logger.info("No unprocessed events found.")
             return
 
-        with RabbitMQPublisher(
+        with RabbitMQManager(
             host=get_settings().rabbitmq_host,
             queue_name="order",
             exchange_name="order_exchange",

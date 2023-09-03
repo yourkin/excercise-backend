@@ -34,7 +34,7 @@ services:
       - ex_back_shared_network
     volumes:
       - ./:/ex_back  # for real-time code updates
-      - beat_data:/ex_back/src/event_publisher  # to persist the beat schedule database
+      - beat_data:/ex_back/src/messaging  # to persist the beat schedule database
 
 volumes:
     beat_data:

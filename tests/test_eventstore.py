@@ -3,9 +3,9 @@ import time
 
 import pytest
 
-from event_publisher.tasks.order_tasks import publish_events_to_rabbitmq
 from ex_back.models import EventOutbox
 from ex_back.types import EventStatus, EventType
+from messaging.tasks.publisher_tasks import publish_events_to_rabbitmq
 
 
 def test_create_order(client, order_stub):

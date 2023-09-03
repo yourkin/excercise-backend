@@ -1,11 +1,12 @@
 import json
+from typing import Optional
 
 import pika
 
 from ex_back.config import get_settings
 
 
-class RabbitMQPublisher:
+class RabbitMQManager:
     def __init__(
         self,
         host: str,
@@ -20,7 +21,7 @@ class RabbitMQPublisher:
         self._connection: pika.BlockingConnection = None
         self._channel: pika.Channel = None
 
-    def __enter__(self) -> "RabbitMQPublisher":
+    def __enter__(self) -> "RabbitMQManager":
         credentials = pika.PlainCredentials(
             username=get_settings().rabbitmq_user, password=get_settings().rabbitmq_pass
         )
@@ -62,3 +63,26 @@ class RabbitMQPublisher:
                 delivery_mode=2,  # Make message persistent
             ),
         )
+
+    def consume_message(self) -> Optional[dict]:
+        method_frame, header_frame, body = self._channel.basic_get(self._queue_name)
+        if method_frame:
+            self._channel.basic_ack(method_frame.delivery_tag)
+            return json.loads(body.decode("utf-8"))
+        return None
+
+    def consume_messages(self, callback, no_ack=False) -> None:
+        """
+        Consume messages indefinitely using a callback function.
+        :param callback: A function that will be called with each message's data.
+        :param no_ack: If True, no acknowledgment will be required for the messages.
+        """
+
+        def _callback(ch, method, properties, body):
+            message = json.loads(body.decode("utf-8"))
+            callback(message)
+
+        self._channel.basic_consume(
+            queue=self._queue_name, on_message_callback=_callback, auto_ack=no_ack
+        )
+        self._channel.start_consuming()

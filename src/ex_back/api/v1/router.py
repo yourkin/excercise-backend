@@ -15,7 +15,7 @@ from ex_back.types import (
     EventType,
     OrderCreated,
 )
-from shared.managers import EventStoreManager, OutboxEventManager
+from shared.managers.events import EventStoreManager, OutboxEventManager
 
 router = APIRouter()
 
