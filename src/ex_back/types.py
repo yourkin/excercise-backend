@@ -115,11 +115,16 @@ class EventOutboxResponse(BaseModel):
     class Config:
         orm_mode = True
 
-    # @classmethod
-    # def from_orm(cls, orm_instance):
-    #     # Create a dictionary of column names and values from the ORM instance
-    #     data = {
-    #         column.name: getattr(orm_instance, column.name)
-    #         for column in orm_instance.__table__.columns
-    #     }
-    #     return cls(**data)
+
+class EventStoreResponse(BaseModel):
+    id: int
+    event_type: str
+    event_data: str
+    occurred_at: datetime
+    version: int
+    aggregate_id: Optional[UUID]
+    metadata_: Optional[dict]
+
+    class Config:
+        orm_mode = True
+        json_encoders = {UUID: str}

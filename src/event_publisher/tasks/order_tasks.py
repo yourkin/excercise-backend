@@ -1,5 +1,6 @@
 import logging
 
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from event_publisher.app import app
@@ -14,7 +15,12 @@ Session = sessionmaker(bind=engine)
 
 
 @app.task
-def publish_events_to_rabbitmq():
+def publish_events_to_rabbitmq(use_test_db: bool = False):
+    if use_test_db:
+        TEST_DATABASE_URL = get_settings().sync_test_database_url
+        engine = create_engine(TEST_DATABASE_URL)
+        Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
     with Session() as session:
         event_store_manager = EventStoreManager(session)
         outbox_event_manager = OutboxEventManager(session)
@@ -31,12 +37,13 @@ def publish_events_to_rabbitmq():
         ) as publisher:
             for outbox_event in unprocessed_outbox_events:
                 try:
-                    with session.begin():
+                    with session.begin_nested():  # Begin a nested transaction
                         publisher.publish(outbox_event.event_data)
                         outbox_event_manager.mark_as_processed(outbox_event)
-                    event_store_manager.save(outbox_event)
+                        event_store_manager.save(outbox_event)
                 except Exception as e:
                     logger.error(
                         f"Failed to process event {outbox_event.id}. Error: {e}"
                     )
                     outbox_event_manager.mark_as_failed(outbox_event, str(e))
+            session.commit()  # Commit the outer transaction

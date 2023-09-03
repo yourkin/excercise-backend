@@ -11,10 +11,11 @@ from ex_back.types import (
     CreateOrderResponse,
     CreateOrderResponseModel,
     EventOutboxResponse,
+    EventStoreResponse,
     EventType,
     OrderCreated,
 )
-from shared.managers import OutboxEventManager
+from shared.managers import EventStoreManager, OutboxEventManager
 
 router = APIRouter()
 
@@ -84,6 +85,36 @@ def get_outbox_event(
         raise HTTPException(status_code=404, detail="Event not found")
 
     return EventOutboxResponse.from_orm(outbox_event)
+
+
+@router.get(
+    "/events/store",
+    response_model=List[EventStoreResponse],
+    response_model_by_alias=True,
+)
+def list_store_events(db: Session = Depends(get_db)) -> List[EventStoreResponse]:
+    manager = EventStoreManager(db)
+    store_events = manager.get_all_events()
+
+    # Convert SQLAlchemy model instances to Pydantic model instances
+    event_responses = [EventStoreResponse.from_orm(event) for event in store_events]
+
+    return event_responses
+
+
+@router.get(
+    "/events/store/{event_id}",
+    response_model=EventStoreResponse,
+    response_model_by_alias=True,
+)
+def get_store_event(event_id: int, db: Session = Depends(get_db)) -> EventStoreResponse:
+    manager = EventStoreManager(db)
+    store_event = manager.get_event_by_id(event_id)
+
+    if not store_event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    return EventStoreResponse.from_orm(store_event)
 
 
 @router.get(

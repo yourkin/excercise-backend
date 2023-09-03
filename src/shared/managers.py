@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -18,7 +18,10 @@ class OutboxEventManager:
 
     def get_unprocessed_events(self) -> List[EventOutbox]:
         return (
-            self.session.query(EventOutbox).filter_by(status=EventStatus.PENDING).all()
+            self.session.query(EventOutbox)
+            .filter_by(status=EventStatus.PENDING)
+            .with_for_update(skip_locked=True)
+            .all()
         )
 
     def mark_as_processed(self, outbox_event: EventOutbox) -> None:
@@ -29,7 +32,7 @@ class OutboxEventManager:
         return self.session.query(EventOutbox).all()
 
     def get_event_by_id(self, event_id: int) -> EventOutbox:
-        return self.session.query(EventOutbox).filter_by(id=event_id).first()
+        return self.session.query(EventOutbox).filter_by(id=event_id).one_or_none()
 
     def mark_as_failed(self, outbox_event: EventOutbox, error: str) -> None:
         outbox_event.status = EventStatus.FAILED
@@ -55,3 +58,12 @@ class EventStoreManager:
         self.session.add(event)
         self.session.commit()
         return event
+
+    def get_event_by_id(self, event_id: int) -> Optional[EventStore]:
+        """
+        Fetch an event from the event store by its ID.
+        """
+        return self.session.query(EventStore).filter_by(id=event_id).one_or_none()
+
+    def get_all_events(self) -> List[EventStore]:
+        return self.session.query(EventStore).all()
