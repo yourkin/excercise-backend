@@ -40,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: EventPublisher.Dockerfile
-    command: python /ex_back/src/messaging/scripts/consumer_script.py
+    command: python /ex_back/scripts/consumer_script.py
     environment:
       - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
       - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
