@@ -6,9 +6,8 @@ services:
     ports:
       - "15672:15672" # Web UI
       - "${RABBITMQ_PORT}:${RABBITMQ_PORT}" # AMQP
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    env_file:
+      - ./.env
     networks:
       - ex_back_shared_network
 

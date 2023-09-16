@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     test_db: str = config("TEST_DB", cast=str)
     testing: bool = config("TESTING", cast=bool, default=False)
     rabbitmq_host: str = config("RABBITMQ_HOST", cast=str)
-    rabbitmq_port: str = config("RABBITMQ_PORT", cast=str)
+    rabbitmq_port: str = config("RABBITMQ_PORT", cast=int)
     rabbitmq_user: str = config("RABBITMQ_DEFAULT_USER", cast=str)
     rabbitmq_pass: str = config("RABBITMQ_DEFAULT_PASS", cast=str)
 
