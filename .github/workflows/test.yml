@@ -6,13 +6,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
+      ENVIRONMENT: development
       POSTGRES_USER: ex_back_user
       POSTGRES_PASSWORD: ex_back_password
       PG_DB: ex_back_db
       PG_HOST: db
       PG_PORT: 5432
       TEST_DB: ex_back_test_db
-      ENVIRONMENT: production
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_DEFAULT_USER: user
