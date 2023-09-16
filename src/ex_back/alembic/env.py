@@ -1,9 +1,9 @@
 from logging.config import fileConfig
 
 from alembic import context
-from decouple import config as decouple_config
 from sqlalchemy import engine_from_config, pool
 
+from ex_back.config import get_settings
 from ex_back.database import Base
 
 # this is the Alembic Config object, which provides
@@ -21,15 +21,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-# Fetch database configurations using python-decouple
-PG_USER = decouple_config("PG_USER")
-PG_PASSWORD = decouple_config("PG_PASSWORD")
-PG_DB = decouple_config("PG_DB")
-PG_HOST = decouple_config("PG_HOST")
-PG_PORT = decouple_config("PG_PORT")
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DB}"
-)
+SQLALCHEMY_DATABASE_URL = get_settings().sync_database_url
 
 
 def run_migrations_offline() -> None:

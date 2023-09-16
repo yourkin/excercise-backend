@@ -2,7 +2,7 @@ import logging
 from functools import lru_cache
 
 from decouple import config
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import BaseSettings
 
 log = logging.getLogger("uvicorn")
 
@@ -22,11 +22,11 @@ class Settings(BaseSettings):
     rabbitmq_pass: str = config("RABBITMQ_DEFAULT_PASS", cast=str)
 
     @property
-    def database_url(self) -> PostgresDsn:
+    def database_url(self) -> str:
         return f"postgresql+asyncpg://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
     @property
-    def test_database_url(self) -> PostgresDsn:
+    def test_database_url(self) -> str:
         return f"postgresql+asyncpg://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.test_db}"
 
     @property
@@ -34,12 +34,12 @@ class Settings(BaseSettings):
         return f"amqp://{self.rabbitmq_user}:{self.rabbitmq_pass}@{self.rabbitmq_host}:{self.rabbitmq_port}//"
 
     @property
-    def sync_database_url(self) -> PostgresDsn:
-        return str(self.database_url).replace("+asyncpg", "")
+    def sync_database_url(self) -> str:
+        return self.database_url.replace("+asyncpg", "")
 
     @property
-    def sync_test_database_url(self) -> PostgresDsn:
-        return str(self.test_database_url).replace("+asyncpg", "")
+    def sync_test_database_url(self) -> str:
+        return self.test_database_url.replace("+asyncpg", "")
 
 
 @lru_cache()

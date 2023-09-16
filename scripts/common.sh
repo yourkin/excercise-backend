@@ -24,6 +24,10 @@ function cleanup() {
       docker-compose -f docker-compose.celery.yml down
     fi
 
+    # Remove the Docker network
+    docker network rm ex_back_shared_network || echo "Failed to remove network ex_back_shared_network"
+
     # Return to the original directory
     cd "$ORIGINAL_DIR" || exit
 }
+

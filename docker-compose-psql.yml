@@ -17,3 +17,4 @@ volumes:
   postgres_data:
 networks:
   ex_back_shared_network:
+    external: true

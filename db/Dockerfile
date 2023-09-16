@@ -1,4 +1,4 @@
-FROM postgres:14.8
+FROM postgres
 
 # Copy initialization scripts
 # For example, you can add a *.sql or *.sh script to the /docker-entrypoint-initdb.d directory

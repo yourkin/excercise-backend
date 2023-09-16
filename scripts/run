@@ -9,6 +9,7 @@ run_from_same_dir() {
 }
 
 run_from_same_dir common.sh
+run_from_same_dir create_network.sh
 
 initialize
 
@@ -35,7 +36,7 @@ case "$1" in
         if [[ "${ENVIRONMENT}" == "production" ]]; then
           docker-compose -f docker-compose-prod.yml run web pytest -vs ../tests
         else
-          docker-compose -f docker-compose-dev.yml run web pytest -vs ../tests
+          docker-compose -f docker-compose-dev.yml run web pytest -rsxX -v ../tests
         fi
         ;;
     alembic)
