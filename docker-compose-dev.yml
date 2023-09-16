@@ -9,20 +9,12 @@ services:
     command: uvicorn ex_back.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
-    environment:
-      - ENVIRONMENT=${ENVIRONMENT}
-      - TESTING=${TESTING}
-      - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
-      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    env_file:
+      - ./.env
     networks:
       - ex_back_shared_network
     volumes:
       - ./:/ex_back
-
 networks:
   ex_back_shared_network:
     external: true
