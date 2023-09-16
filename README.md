@@ -26,7 +26,7 @@ Before running the application, environment variables must be set in the .env fi
 
 ## Running the application
 
-The application can be run locally in development mode by executing the `run.sh` script in the root directory of the repository.
+The application can be run locally in development mode by executing `./run` in the root directory of the repository.
 Depending on the environment variables set, the application will run the development server on port 8000 or production server on port 80.
 Navigate to /docs to see the API documentation.
 
