@@ -18,10 +18,7 @@ We finalize the missing parts in this repository so that the following requireme
 4. in case of an error in the endpoint it should return the status code 500 and the body `{"message": "Internal server error while placing the order"}` 
 5. the API should be highly scalable and reliable. The reliability of the provided stock exchange should not impact the reliability of the `POST /orders` endpoint
 
-
 Additionally, tests and documentation on how to test the application as a whole and its pieces.
-
-A `solution.md` file documents the decisions, assumptions, and also improvements that might be incorporated in the future.
 
 ## Environment variables
 
@@ -29,7 +26,7 @@ Before running the application, environment variables must be set in the .env fi
 
 ## Running the application
 
-The application can be run locally in development mode by executing the `run.sh` script in the root directory of the repository.
+The application can be run locally in development mode by executing `./run` in the root directory of the repository.
 Depending on the environment variables set, the application will run the development server on port 8000 or production server on port 80.
 Navigate to /docs to see the API documentation.
 
@@ -48,6 +45,6 @@ The repository contains branches that each represent a distinct approach to the 
 
 ### Current branch
 
-`alembic` 
+`event-sourcing/rabbitmq-celery-redis` 
 
-This branch offers an enhancement over the `concurrency` branch by introducing Alembic for database migrations. Alembic provides version control to the database schema, ensuring smooth updates and changes as the project evolves. 
+This branch implements event-sourcing with the transactional outbox pattern using RabbitMQ, Celery, and Redis. The application architecture leverages RabbitMQ for event publishing, Celery for asynchronous task execution, and Redis for caching, concurrency management, and task queuing. Event sourcing, a design pattern, is employed to capture and persist all changes to the application state as a sequence of immutable events. This approach provides a reliable audit trail of past actions, enabling data consistency, auditing, and the ability to reconstruct application state from historical events. 

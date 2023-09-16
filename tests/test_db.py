@@ -1,9 +1,9 @@
-import os
-
 import asyncpg
 import pytest
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+from ex_back.config import get_settings
+
+DATABASE_URL = get_settings().test_database_url
 
 # asyncpg requires the postgresql:// scheme unlike SQLAlchemy for async operations
 if DATABASE_URL.startswith("postgresql+asyncpg://"):

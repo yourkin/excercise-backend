@@ -25,11 +25,12 @@ RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; els
 # add app
 COPY . /ex_back
 
-# add entrypoint.sh
-COPY ./scripts/entrypoint.sh /ex_back/scripts/entrypoint.sh
-RUN chmod +x /ex_back/scripts/entrypoint.sh
+COPY ./scripts/start_worker.sh /ex_back/scripts/start_worker.sh
+RUN chmod +x /ex_back/scripts/start_worker.sh
+
+COPY ./scripts/start_beat.sh /ex_back/scripts/start_beat.sh
+RUN chmod +x /ex_back/scripts/start_beat.sh
 
 WORKDIR /ex_back/src/
 
-## run entrypoint.sh
-ENTRYPOINT ["/ex_back/scripts/entrypoint.sh"]
+CMD ["/start_worker.sh"]

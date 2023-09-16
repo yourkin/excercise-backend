@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  producer:
+    build:
+      context: .
+      dockerfile: EventPublisher.Dockerfile
+    command: /ex_back/scripts/start_worker.sh
+    env_file:
+      - ./.env
+    networks:
+      - ex_back_shared_network
+    volumes:
+      - ./:/ex_back  # for real-time code updates
+
+  beat:
+    build:
+      context: .
+      dockerfile: EventPublisher.Dockerfile
+    command: /ex_back/scripts/start_beat.sh
+    env_file:
+      - ./.env
+    networks:
+      - ex_back_shared_network
+    volumes:
+      - ./:/ex_back  # for real-time code updates
+      - beat_data:/ex_back/src/messaging  # to persist the beat schedule database
+
+  consumer:
+    build:
+      context: .
+      dockerfile: EventPublisher.Dockerfile
+    command: python /ex_back/scripts/consumer_script.py
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${PG_DB}
+      - TEST_DATABASE_URL=postgresql+asyncpg://${PG_USER}:${PG_PASSWORD}@db:5432/${TEST_DB}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_PORT=${RABBITMQ_PORT}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    networks:
+      - ex_back_shared_network
+    volumes:
+      - ./:/ex_back  # for real-time code updates
+
+volumes:
+    beat_data:
+
+networks:
+  ex_back_shared_network:
+    external: true

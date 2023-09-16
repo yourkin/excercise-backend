@@ -6,12 +6,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      PG_USER: excercise_user
-      PG_PASSWORD: excercise_password
-      PG_DB: excercise_db
+      POSTGRES_USER: ex_back_user
+      POSTGRES_PASSWORD: ex_back_password
+      PG_DB: ex_back_db
       PG_HOST: db
       PG_PORT: 5432
-      TEST_DB: excercise_test_db
+      TEST_DB: ex_back_test_db
       RABBIT_MQ_URL: amqp://guest:guest@localhost:5672/
       CELERY_BROKER_URL: amqp://guest:guest@localhost:5672/
       ENVIRONMENT: production
@@ -22,6 +22,18 @@ jobs:
 
     - name: Create .env
       run: touch .env
+
+    - name: Write to .env
+      run: |
+        echo "POSTGRES_USER=${{ env.POSTGRES_USER }}" >> .env
+        echo "POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}" >> .env
+        echo "PG_DB=${{ env.PG_DB }}" >> .env
+        echo "PG_HOST=${{ env.PG_HOST }}" >> .env
+        echo "PG_PORT=${{ env.PG_PORT }}" >> .env
+        echo "TEST_DB=${{ env.TEST_DB }}" >> .env
+        echo "RABBIT_MQ_URL=${{ env.RABBIT_MQ_URL }}" >> .env
+        echo "CELERY_BROKER_URL=${{ env.CELERY_BROKER_URL }}" >> .env
+        echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> .env
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -35,5 +47,4 @@ jobs:
           ${{ runner.os }}-buildx-
 
     - name: Run tests
-      run: |
-        docker-compose -f docker-compose-gh.yml run web pytest -vvs 
+      run: scripts/run test
