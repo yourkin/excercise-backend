@@ -3,11 +3,11 @@
 ## Tech Stack
 yourkin/modern-backend is built on the following main stack:
 
-- [Python](https://www.python.org) – Languages
 - [Mako](https://github.com/zzzeek/mako) – Templating Languages & Extensions
-- [Shell](https://en.wikipedia.org/wiki/Shell_script) – Shells
-- [GitHub Actions](https://github.com/features/actions) – Continuous Integration
+- [Python](https://www.python.org) – Languages
 - [Docker](https://www.docker.com/) – Virtual Machine Platforms & Containers
+- [GitHub Actions](https://github.com/features/actions) – Continuous Integration
+- [Shell](https://en.wikipedia.org/wiki/Shell_script) – Shells
 
 Full tech stack [here](/techstack.md)
 
@@ -17,11 +17,11 @@ Full tech stack [here](/techstack.md)
 ## Tech Stack
 yourkin/modern-backend is built on the following main stack:
 
-- <img width='25' height='25' src='https://img.stackshare.io/service/993/pUBY5pVj.png' alt='Python'/> [Python](https://www.python.org) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/3583/default_43e3ee00dcc48a40f6fcba33551e4f5a99a10537.png' alt='Mako'/> [Mako](https://github.com/zzzeek/mako) – Templating Languages & Extensions
-- <img width='25' height='25' src='https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png' alt='Shell'/> [Shell](https://en.wikipedia.org/wiki/Shell_script) – Shells
-- <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
+- <img width='25' height='25' src='https://img.stackshare.io/service/993/pUBY5pVj.png' alt='Python'/> [Python](https://www.python.org) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/586/n4u37v9t_400x400.png' alt='Docker'/> [Docker](https://www.docker.com/) – Virtual Machine Platforms & Containers
+- <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
+- <img width='25' height='25' src='https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png' alt='Shell'/> [Shell](https://en.wikipedia.org/wiki/Shell_script) – Shells
 
 Full tech stack [here](/techstack.md)
 
@@ -32,7 +32,7 @@ Full tech stack [here](/techstack.md)
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [yourkin/modern-backend](https://github.com/yourkin/modern-backend)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|18<br/>Tools used|01/05/24 <br/>Report generated|
+|18<br/>Tools used|02/29/24 <br/>Report generated|
 |------|------|
 </div>
 
@@ -117,7 +117,7 @@ Full tech stack [here](/techstack.md)
 |[alembic](https://pypi.org/project/alembic)|v1.11.3|08/21/23|Andrew Yourkin |MIT|N/A|
 |[asyncpg](https://pypi.org/project/asyncpg)|v0.28.0|08/04/23|Andrew Yourkin |Apache-2.0|N/A|
 |[celery](https://pypi.org/project/celery)|v5.3.1|08/01/23|Andrew Yourkin |BSD-3-Clause|N/A|
-|[fastapi](https://pypi.org/project/fastapi)|v0.100.1|08/03/23|Andrew Yourkin |MIT|N/A|
+|[fastapi](https://pypi.org/project/fastapi)|v0.100.1|08/03/23|Andrew Yourkin |MIT|[](https://github.com/advisories/GHSA-qf9m-vfgh-m389) (High)<br/>[CVE-2024-24762](https://github.com/advisories/GHSA-2jv5-9r88-3w3p) (High)|
 |[gunicorn](https://pypi.org/project/gunicorn)|v21.2.0|08/04/23|Andrew Yourkin |MIT|N/A|
 |[httpx](https://pypi.org/project/httpx)|v0.24.1|08/04/23|Andrew Yourkin |BSD-3-Clause|N/A|
 |[pika](https://pypi.org/project/pika)|v1.3.2|09/02/23|Andrew Yourkin |BSD-3-Clause|N/A|
